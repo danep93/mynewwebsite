@@ -1,21 +1,14 @@
 ---
-title: "What is a name? LSTMs"
+title: "What is a name? Intro to Long Short Term Networks"
 date: 2018-03-28T13:55:10-04:00
 draft: false
 ---
-![no-name](img/no-name.jpg)
-TODO:
+![no-name](/img/no-name.jpg)
 
-include link to notebooks (put on github) <br>
-make your own sigmoid graph (optional)<br>
-improve code highlighting <br>
-improve code font size <br>
-make graph where x axis is length y is ratio <br>
+<br><br>
+Today I want to talk about names. Mine has been around since the Old Testament, but recently celebrities have been getting pretty creative with what they call their kids. A few weeks ago, my team was assigned a project parsing resumes for new hires, and when I realized that some students actually don't put their name at the top of the page, I thought this would be an interesting problem to solve using a neural net. That is today’s mission: to distinguish names from regular words, and eventually, distinguish male names from female names.
 
-<br><br><br>
-Today I want to talk about names. Mine has been around since the Old Testament, but recently celebrities have been getting pretty creative with what they call their kids. A few weeks ago, my team was assigned a project parsing resumes for new hires, and when I realized that some students were born on Mars and never learned to put their name at the top of the page, I thought this would be an interesting problem to solve with a neural net. That is today’s mission: to distinguish names from regular words, and eventually, distinguish male names from female names.
-
-Long Short Term Memory (LSTM) are a type of recurrent neural network that are great at this application; they use context from previous input features to predict what the next output should be. For example, if you wanted to predict the end of the sentence “in France they speak ___”, and use each (tokenized) word of the sentence as a feature, the LSTM would use “France” and “speak” to deduce the sentence ends in “french”. This assumes you have a network that’s already been trained on an extensive corpus of the English language, such as the Glove dataset. That’s exactly what Spacy is; it’s a Natural Language Processing library that’s pre-trained on this general English language corpus and uses sentence context to do things like classify words as adjectives, proper nouns, ect… Unfortunately, without sentence context, Spacy comes up short. When parsing the resume header
+Long Short Term Memory Networks (LSTM) are a type of recurrent neural network that are great at this application; they use context from previous input features to predict what the next output should be. For example, if you wanted to predict the end of the sentence “in France they speak ___”, and use each (tokenized) word of the sentence as a feature, the LSTM would use “France” and “speak” to deduce the sentence ends in “French”. This assumes you have a network that’s already been trained on an extensive corpus of the English language, such as the Glove dataset. That’s exactly what Spacy is; it’s a Natural Language Processing library that’s pre-trained on this general English language corpus and uses sentence context to do things like classify words as adjectives, proper nouns, etc… Unfortunately, without sentence context, Spacy comes up short. When parsing the resume header
 
 john smith
 <br>
@@ -95,11 +88,11 @@ Our Sigmoid Activation layer takes that single value and fits it to a score betw
 
 Now we split our data into train and test sets and fit the model, specifying a total of 10 epochs and designating 33% of our training data to be used as a holdout/validation set. Holdout cross validation isn’t ideal but we’ll talk about that later. Below we’ve plotted the loss vs epoch
 
-![first-loss-graph](img/first-loss-graph.png)
+![first-loss-graph](/img/first-loss-graph.png)
 
 As you can see, after each epoch our training and validation loss both go down, which is what we love to see. Here you can see the sweet spot for training and validation data where validation error is at a global minimum
 
-![ideal-loss-graph](img/ideal-loss.png)
+![ideal-loss-graph](/img/ideal-loss.png)
 
 Our graph hasn’t evened out at the end which means our model is relatively under-fitted. We’ll talk more about that later and what we can do to correct it.
 
@@ -168,10 +161,10 @@ Sure enough, grid_result tells us we get our best accuracy with . . .<br>
 *batch_size*: 32 <br>
 *Epochs*: 18 <br>
 
-Disclaimer, have your computer plugged in if you’re gonna try that. I ran this overnight and it was still running when I woke up.
+Disclaimer, have your computer plugged in if you’re going to try this. I ran this overnight and it was still running when I woke up.
 Now let’s take a look at our updated loss graph
 
-![second-loss-graph](img/second-loss-graph.png)
+![second-loss-graph](/img/second-loss-graph.png)
 
 As you can see, we’re much closer to that sweet spot that’s circled above. Thanks to gridsearchcv our loss at epoch 1 is less than our loss at epoch 15 when using our initial hyper parameters. Now let’s check out our accuracy
 
@@ -187,17 +180,19 @@ Exploratory Data Analysis (EDA) is an important part of any data science problem
 
 Below I’ve visualized the F1 scores, where green dots are points that are correctly classified while red points are incorrectly classified. Points appearing in the left side of the screen received a sigmoid score of under 0.5, meaning our model predicted they are words, while points on the right side are predicted as names. The worst thing we can see is a bunch of red points at either extreme. Here I’m graphing the sigmoid score against word length and vowel:consonant ratio to see if either of those features affect classification.
 
-![vowel ratio](img/vowel-graph.png)
-![word length](img/word-length-graph.png)
+![vowel ratio](/img/vowel-graph.png)
+![word length](/img/word-length-graph.png)
 
 
-Unfortunately there doesn’t appear to be any correlation between these dependent and independent variables.
+Unfortunately there doesn’t appear to be any correlation between these dependent and independent variables. However, I think this is a great opportunity to point something out. Looking at our graph above, we have a bunch of green points located at both X-axis extremes of the graph; this is great because it means not only did we correctly classify both words and names, but often times we were VERY sure it was a name (sigmoid score ~1) or a word (sigmoid score ~1). Additionally, most of our red dots (incorrectly classified) are located near the 0.5 barrier, which means although we got them wrong, our model never claimed to be sure about it's classification. Let's compare this to the same graph we got before we tuned our hyperparameters
+
+![first word length](/img/first-wordlength.png)
+
+As you can see, our original model had plenty of correctly classified words and names but all our green points gravitated towards the middle barrier. Out of the thousands of words we passed in, there wasn't a
+single one that our model was 80% sure of what it was. I know we already mentioned that our accuracy went up a few percentage points after hyperparameter tuning, but I think this does a better job showing us exactly how much better of a model we ended up with.
 
 
-
-We ended up with a model that can distinguish between names and non-names with an accuracy of 83% and a log loss bordering 0.3 Ideally it would have performed a little better, however, I have to cut it some slack. Names are a tough domain, and most of the times I’m not even sure how I feel about specific ones. Liz Lemon has plenty of opinions though
-
-EMBED YOUTUBE VIDEO OF LIZ LEMON ON NAMES
+We ended up with a model that can distinguish between names and non-names with an accuracy of 83% and a log loss bordering 0.3. Ideally it would have performed a little better, however, I have to cut it some slack. Names are a tough domain, and most of the times I’m not even sure how I feel about specific ones. Liz Lemon has plenty of opinions though
 
 https://www.youtube.com/watch?v=-2hvM-FNOEA
 
@@ -258,7 +253,7 @@ history = model.fit(X_train, y_train, epochs = epochs, batch_size = batch_size, 
 
 Notice that we changed our Dense(1) layer to Dense(3). That’s because before we wanted to pass a single scalar to our Sigmoid function, but now we want to pass 3 scores to our softmax function, to be converted to probabilities of certainty. Anything different would cause an error complaining on mismatched dimensions. We fit our model and use it to predict values on test data, indicated by y_true columns. Below are a few examples of how our predictions match up against our true test values.
 
-![softmax-predictions](img/softmax-predictions.png)
+![softmax-predictions](/img/softmax-predictions.png)
 
 Woah. That's both impressive and hard to interpret so let me explain. When we changed our y-values to an array
 built by pd.get_dummies, we passed in targets where each target was an array of size 3, where each array has
@@ -274,7 +269,7 @@ class 3, or belonging to an internet word. The "flat y_true" column indicates th
 
 Here are some more examples in case you want to continue to pit yourself against a machine
 
-![more-softmax-predictions](img/more-softmax-predictions.png)
+![more-softmax-predictions](/img/more-softmax-predictions.png)
 
 Pshh.... I knew Grissel was a girls name. Teutonic baby name
 meaning gray haired heroine. That name is *so hot right now*.
@@ -306,7 +301,7 @@ print(list(in_training))
 
 Now we know that we can't test our model on Charlie, Taylor, or Alexander. Moving forwards, let's see what our model (which correctly called Grissel btw) tells us about these other names
 
-![final-testing-names](img/final-testing-names.png)
+![final-testing-names](/img/final-testing-names.png)
 
 You love to see that. Our model correctly identified Charli as a girls name and Charly as (just barely) a boys name. Think our model could have done better? 2 of these are celebrity baby names, 2 are regular words. Let’s see how many you get.
 
@@ -315,6 +310,6 @@ Journey
 Racer
 Java
 
-Referenced below are all notebooks used in this blogpost. Want to try your own words? Check out 3-plug-n-chug-softmax.
+Referenced below are all notebooks used in this blogpost. Want to try your own words? Check out plug-n-chug-softmax.
 
 And there you have it! Today we learned what it takes to reformat and preprocess your data, pass through an LSTM network, perform grid search cross validation to perfect hyper parameters, and evaluate your results. Thank you for reading, if you’ve gotten this far you should know I lied, all four of those names belong to real celebrity babies. A special thanks to Domenic Puzio https://www.linkedin.com/in/domenicpuzio/ for helping me get started and machinelearningmastery for covering every topic under the sun.
