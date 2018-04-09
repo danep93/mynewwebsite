@@ -1,7 +1,7 @@
 ---
 title: "What is a name? LSTMs"
 date: 2018-03-28T13:55:10-04:00
-draft: true
+draft: false
 ---
 ![no-name](/img/no-name.jpg)
 TODO:
