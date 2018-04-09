@@ -3,7 +3,7 @@ title: "What is a name? LSTMs"
 date: 2018-03-28T13:55:10-04:00
 draft: false
 ---
-![no-name](/img/no-name.jpg)
+![no-name](img/no-name.jpg)
 TODO:
 
 include link to notebooks (put on github) <br>
@@ -95,11 +95,11 @@ Our Sigmoid Activation layer takes that single value and fits it to a score betw
 
 Now we split our data into train and test sets and fit the model, specifying a total of 10 epochs and designating 33% of our training data to be used as a holdout/validation set. Holdout cross validation isn’t ideal but we’ll talk about that later. Below we’ve plotted the loss vs epoch
 
-![first-loss-graph](/img/first-loss-graph.png)
+![first-loss-graph](img/first-loss-graph.png)
 
 As you can see, after each epoch our training and validation loss both go down, which is what we love to see. Here you can see the sweet spot for training and validation data where validation error is at a global minimum
 
-![ideal-loss-graph](/img/ideal-loss.png)
+![ideal-loss-graph](img/ideal-loss.png)
 
 Our graph hasn’t evened out at the end which means our model is relatively under-fitted. We’ll talk more about that later and what we can do to correct it.
 
@@ -171,7 +171,7 @@ Sure enough, grid_result tells us we get our best accuracy with . . .<br>
 Disclaimer, have your computer plugged in if you’re gonna try that. I ran this overnight and it was still running when I woke up.
 Now let’s take a look at our updated loss graph
 
-![second-loss-graph](/img/second-loss-graph.png)
+![second-loss-graph](img/second-loss-graph.png)
 
 As you can see, we’re much closer to that sweet spot that’s circled above. Thanks to gridsearchcv our loss at epoch 1 is less than our loss at epoch 15 when using our initial hyper parameters. Now let’s check out our accuracy
 
@@ -187,8 +187,8 @@ Exploratory Data Analysis (EDA) is an important part of any data science problem
 
 Below I’ve visualized the F1 scores, where green dots are points that are correctly classified while red points are incorrectly classified. Points appearing in the left side of the screen received a sigmoid score of under 0.5, meaning our model predicted they are words, while points on the right side are predicted as names. The worst thing we can see is a bunch of red points at either extreme. Here I’m graphing the sigmoid score against word length and vowel:consonant ratio to see if either of those features affect classification.
 
-![vowel ratio](/img/vowel-graph.png)
-![word length](/img/word-length-graph.png)
+![vowel ratio](img/vowel-graph.png)
+![word length](img/word-length-graph.png)
 
 
 Unfortunately there doesn’t appear to be any correlation between these dependent and independent variables.
@@ -258,7 +258,7 @@ history = model.fit(X_train, y_train, epochs = epochs, batch_size = batch_size, 
 
 Notice that we changed our Dense(1) layer to Dense(3). That’s because before we wanted to pass a single scalar to our Sigmoid function, but now we want to pass 3 scores to our softmax function, to be converted to probabilities of certainty. Anything different would cause an error complaining on mismatched dimensions. We fit our model and use it to predict values on test data, indicated by y_true columns. Below are a few examples of how our predictions match up against our true test values.
 
-![softmax-predictions](/img/softmax-predictions.png)
+![softmax-predictions](img/softmax-predictions.png)
 
 Woah. That's both impressive and hard to interpret so let me explain. When we changed our y-values to an array
 built by pd.get_dummies, we passed in targets where each target was an array of size 3, where each array has
@@ -274,7 +274,7 @@ class 3, or belonging to an internet word. The "flat y_true" column indicates th
 
 Here are some more examples in case you want to continue to pit yourself against a machine
 
-![more-softmax-predictions](/img/more-softmax-predictions.png)
+![more-softmax-predictions](img/more-softmax-predictions.png)
 
 Pshh.... I knew Grissel was a girls name. Teutonic baby name
 meaning gray haired heroine. That name is *so hot right now*.
@@ -306,7 +306,7 @@ print(list(in_training))
 
 Now we know that we can't test our model on Charlie, Taylor, or Alexander. Moving forwards, let's see what our model (which correctly called Grissel btw) tells us about these other names
 
-![final-testing-names](/img/final-testing-names.png)
+![final-testing-names](img/final-testing-names.png)
 
 You love to see that. Our model correctly identified Charli as a girls name and Charly as (just barely) a boys name. Think our model could have done better? 2 of these are celebrity baby names, 2 are regular words. Let’s see how many you get.
 
